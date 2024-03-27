@@ -12,6 +12,8 @@ export default function SignInScreen() {
 
   const navigation = useNavigation();
 
+  // ADDED SAMPLE COMMENT
+
   const handleSubmit = () => {
     if (email && password) {
       signInWithFirebase(email, password)
