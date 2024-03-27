@@ -5,12 +5,15 @@ import { colors } from "../themes";
 import BackButton from "../components/BackButton";
 import { useNavigation } from "@react-navigation/core";
 import { signInWithFirebase } from "../services/authService";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/slices/user";
 
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   // ADDED SAMPLE COMMENT
 
@@ -19,7 +22,14 @@ export default function SignInScreen() {
       signInWithFirebase(email, password)
         .then((res) => {
           // USER IS VALID, PROCESS AHEAD
-          console.log(res);
+          if (res.uid)
+            dispatch(
+              setUser({
+                email: res.email,
+                emailVerified: res.emailVerified,
+                uid: res.uid,
+              })
+            );
         })
         .catch((err) => {
           // USER IS INVALID
