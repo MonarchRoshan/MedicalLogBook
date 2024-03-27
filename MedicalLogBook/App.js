@@ -1,14 +1,12 @@
+import AppNavigation from "./navigation/AppNavigation";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
-
-import AppNavigation from './navigation/AppNavigation';
-import { Provider } from 'react-redux';
-
- function App() {
+function App() {
   return (
     <Provider store={store}>
-            <AppNavigation/>
+      <AppNavigation />
     </Provider>
-    
   );
 }
 
