@@ -7,6 +7,7 @@ import {
   FlatList,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import AdmissionsScreen from "../components/AdmissionsScreen";
 
 const LogbookScreen = () => {
   const [searchText, setSearchText] = useState("");
