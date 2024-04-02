@@ -8,6 +8,10 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AdmissionsScreen from "../components/AdmissionsScreen";
+import { Modal } from "react-native";
+import ClinicsScreen from "../components/ClinicsScreen";
+import CpdScreens from "../components/CpdScreens";
+import ProcedureScreen from "../components/ProcedureScreen";
 
 const LogbookScreen = () => {
   const [searchText, setSearchText] = useState("");
@@ -34,8 +38,23 @@ const LogbookScreen = () => {
     },
   ]);
 
+  const [modalType, setModalType] = useState(null);
+
+  const openModal = (modalType) => {
+    setModalType(modalType);
+  };
+
+  const openSpecificTodoForm = (data) => {
+    openModal(data.category);
+  };
+
   const renderItem = ({ item }) => (
-    <TouchableOpacity className="p-4 border-b border-gray-200 flex flex-row items-center">
+    <TouchableOpacity
+      onPress={() => {
+        openSpecificTodoForm(item);
+      }}
+      className="p-4 border-b border-gray-200 flex flex-row items-center"
+    >
       <View className="p-2 border mr-4">
         <Icon name="plus" size={16} color="black" />
       </View>
@@ -85,6 +104,18 @@ const LogbookScreen = () => {
           <Text className="text-white font-light">Add Entry</Text>
         </View>
       </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={todos.some((todo) => todo.category === modalType)}
+        onRequestClose={() => setModalType(null)}
+      >
+        {modalType === "Admissions" && <AdmissionsScreen />}
+        {modalType === "CPD" && <CpdScreens />}
+        {modalType === "Clinics" && <ClinicsScreen />}
+        {modalType === "Procedure" && <ProcedureScreen />}
+      </Modal>
     </View>
   );
 };
