@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, FlatList } from 'react-native';
 
-const MyComponent = () => {
+const AdmissionScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [location, setLocation] = useState('');
@@ -18,10 +18,10 @@ const MyComponent = () => {
   const [showSpecialtyAreaDropdown, setShowSpecialtyAreaDropdown] = useState(false);
   const [showOutcomeDropdown, setShowOutcomeDropdown] = useState(false);
 
-  const locations = ['Location 1', 'Location 2', 'Location 3'];
-  const roles = ['Role 1', 'Role 2', 'Role 3'];
-  const specialtyAreas = ['Specialty Area 1', 'Specialty Area 2', 'Specialty Area 3'];
-  const outcomes = ['Outcome 1', 'Outcome 2', 'Outcome 3'];
+  const locations = ['Medical Ward', 'Ambulance Bay', 'Intensive Care Unit'];
+  const roles = ['Clerked','Reviewed' ];
+  const specialtyAreas = ['Cardiothoracic Surgery', 'Alcohol and Drug Intoxication', 'Allergy'];
+  const outcomes = ['Admitted', 'Discharged', 'Ward Care'];
 
   const handleDropdownSelect = (value, setValueFunction, setShowDropdownFunction) => {
     setValueFunction(value);
@@ -182,4 +182,4 @@ const Dropdown = ({ label, value, setValue, options, showDropdown, setShowDropdo
   );
 };
 
-export default MyComponent;
+export default AdmissionScreen;
