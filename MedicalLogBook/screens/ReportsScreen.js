@@ -1,209 +1,134 @@
-import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  Button,
-  Alert,
-  Modal,
-  TouchableOpacity,
-  Text,
-} from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useState } from 'react';
+import { View, TextInput, Button, DatePickerAndroid, Alert, Modal, TouchableOpacity, Text } from 'react-native';
 
 const MyForm = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    surname: "",
-    fromDate: new Date(),
-    toDate: new Date(),
-    typeModalVisible: false,
-    fileFormatModalVisible: false,
-    type: "",
-    fileFormat: "",
-  });
+  const [firstName, setFirstName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [typeModalVisible, setTypeModalVisible] = useState(false);
+  const [fileFormatModalVisible, setFileFormatModalVisible] = useState(false);
+  const [type, setType] = useState('');
+  const [fileFormat, setFileFormat] = useState('');
 
-  const [showStartDatePicker, setStartDatePicker] = useState(false);
-  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
-
-  const toggleStartDatePicker = () => {
-    setStartDatePicker((prev) => !prev);
-  };
-  const toggleEndDatePicker = () => {
-    setShowEndDatePicker((prev) => !prev);
-  };
-
-  const handleFromDatePress = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    toggleStartDatePicker();
-    setFormData({ ...formData, fromDate: currentDate });
+  const handleFromDatePress = async () => {
+    try {
+      const { action, year, month, day } = await DatePickerAndroid.open({
+        date: new Date(),
+        mode: 'default',
+      });
+      if (action !== DatePickerAndroid.dismissedAction) {
+        setFromDate(`${year}-${month + 1}-${day}`);
+      }
+    } catch ({ code, message }) {
+      console.warn('Cannot open date picker', message);
+    }
   };
 
-  const handleToDatePress = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    toggleEndDatePicker();
-    setFormData({ ...formData, toDate: currentDate });
+  const handleToDatePress = async () => {
+    try {
+      const { action, year, month, day } = await DatePickerAndroid.open({
+        date: new Date(),
+        mode: 'default',
+      });
+      if (action !== DatePickerAndroid.dismissedAction) {
+        setToDate(`${year}-${month + 1}-${day}`);
+      }
+    } catch ({ code, message }) {
+      console.warn('Cannot open date picker', message);
+    }
   };
 
   const handleTypeSelect = (selectedType) => {
-    setFormData({
-      ...formData,
-      type: selectedType,
-      typeModalVisible: false,
-    });
+    setType(selectedType);
+    setTypeModalVisible(false);
   };
 
   const handleFileFormatSelect = (selectedFormat) => {
-    setFormData({
-      ...formData,
-      fileFormat: selectedFormat,
-      fileFormatModalVisible: false,
-    });
+    setFileFormat(selectedFormat);
+    setFileFormatModalVisible(false);
   };
 
   const handleDownload = () => {
     // Add your logic here to download file based on form inputs
     // For demonstration purposes, let's just display an alert
-    Alert.alert("Download", "File will be downloaded based on form inputs.");
+    Alert.alert('Download', 'File will be downloaded based on form inputs.');
   };
-
-  console.log(formData);
 
   return (
     <View className="p-4">
-      <Text className="mb-4">
-        You can record the following clinical activities in your logbook.{" "}
-      </Text>
+      <Text className="mb-4">You can record the following clinical activities in your logbook. </Text>
       <TextInput
         className="border border-gray-400 rounded p-2 mb-4"
         placeholder="First Name"
-        value={formData.firstName}
-        onChangeText={(text) => setFormData({ ...formData, firstName: text })}
+        value={firstName}
+        onChangeText={text => setFirstName(text)}
       />
       <TextInput
         className="border border-gray-400 rounded p-2 mb-4"
         placeholder="Surname"
-        value={formData.surname}
-        onChangeText={(text) => setFormData({ ...formData, surname: text })}
+        value={surname}
+        onChangeText={text => setSurname(text)}
       />
       <View className="flex-row mb-4">
         <TextInput
           className="border border-gray-400 rounded p-2 flex-1 mr-2"
-          placeholder="Choose From Date"
-          value={formData.fromDate.toDateString()}
+          placeholder="From Date"
+          value={fromDate}
           editable={false}
         />
-
-        <Button onPress={toggleStartDatePicker} title="Select" />
-
-        {showStartDatePicker && (
-          <DateTimePicker
-            testID="dateTimePickerSelectFrom"
-            value={formData.fromDate}
-            mode={"date"}
-            is24Hour={true}
-            onChange={handleFromDatePress}
-          />
-        )}
+        <Button title="Select" onPress={handleFromDatePress} />
       </View>
       <View className="flex-row mb-4">
         <TextInput
           className="border border-gray-400 rounded p-2 flex-1 mr-2"
-          placeholder="Choose End Date"
-          value={formData.toDate.toDateString()}
+          placeholder="To Date"
+          value={toDate}
           editable={false}
         />
-        <Button onPress={toggleEndDatePicker} title="Select" />
-
-        {showEndDatePicker && (
-          <DateTimePicker
-            testID="dateTimePickerSelectTo"
-            value={formData.toDate}
-            mode={"date"}
-            is24Hour={true}
-            onChange={handleToDatePress}
-          />
-        )}
+        <Button title="Select" onPress={handleToDatePress} />
       </View>
-      <TouchableOpacity
-        onPress={() => setFormData({ ...formData, typeModalVisible: true })}
-        className="border border-gray-400 rounded p-2 mb-4"
-      >
-        <Text className="text-gray-600">
-          {formData.type ? formData.type : "Select Type"}
-        </Text>
+      <TouchableOpacity onPress={() => setTypeModalVisible(true)} className="border border-gray-400 rounded p-2 mb-4">
+        <Text className="text-gray-600">{type ? type : 'Select Type'}</Text>
       </TouchableOpacity>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={formData.typeModalVisible}
-        onRequestClose={() =>
-          setFormData({ ...formData, typeModalVisible: false })
-        }
+        visible={typeModalVisible}
+        onRequestClose={() => setTypeModalVisible(false)}
       >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
-          }}
-        >
-          <View
-            style={{ backgroundColor: "white", padding: 16, borderRadius: 8 }}
-          >
-            <TouchableOpacity onPress={() => handleTypeSelect("Type 1")}>
-              <Text style={{ color: "gray", marginBottom: 8 }}>Type 1</Text>
+        <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+          <View className="bg-white p-4 rounded">
+            <TouchableOpacity onPress={() => handleTypeSelect('Type 1')}>
+              <Text className="text-gray-600 mb-2">Type 1</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleTypeSelect("Type 2")}>
-              <Text style={{ color: "gray", marginBottom: 8 }}>Type 2</Text>
+            <TouchableOpacity onPress={() => handleTypeSelect('Type 2')}>
+              <Text className="text-gray-600 mb-2">Type 2</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                setFormData({ ...formData, typeModalVisible: false })
-              }
-            >
-              <Text style={{ color: "red" }}>Cancel</Text>
+            <TouchableOpacity onPress={() => setTypeModalVisible(false)}>
+              <Text className="text-red-600">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-      <TouchableOpacity
-        onPress={() =>
-          setFormData({ ...formData, fileFormatModalVisible: true })
-        }
-        style={{
-          borderWidth: 1,
-          borderColor: "gray",
-          borderRadius: 4,
-          padding: 8,
-          marginBottom: 16,
-        }}
-      >
-        <Text style={{ color: "gray" }}>
-          {formData.fileFormat ? formData.fileFormat : "Select File Format"}
-        </Text>
+      <TouchableOpacity onPress={() => setFileFormatModalVisible(true)} className="border border-gray-400 rounded p-2 mb-4">
+        <Text className="text-gray-600">{fileFormat ? fileFormat : 'Select File Format'}</Text>
       </TouchableOpacity>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={formData.fileFormatModalVisible}
-        onRequestClose={() =>
-          setFormData({ ...formData, fileFormatModalVisible: false })
-        }
+        visible={fileFormatModalVisible}
+        onRequestClose={() => setFileFormatModalVisible(false)}
       >
         <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
           <View className="bg-white p-4 rounded">
-            <TouchableOpacity onPress={() => handleFileFormatSelect("PDF")}>
+            <TouchableOpacity onPress={() => handleFileFormatSelect('PDF')}>
               <Text className="text-gray-600 mb-2">PDF</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleFileFormatSelect("CSV")}>
+            <TouchableOpacity onPress={() => handleFileFormatSelect('CSV')}>
               <Text className="text-gray-600 mb-2">CSV</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                setFormData({ ...formData, fileFormatModalVisible: false })
-              }
-            >
+            <TouchableOpacity onPress={() => setFileFormatModalVisible(false)}>
               <Text className="text-red-600">Cancel</Text>
             </TouchableOpacity>
           </View>
