@@ -5,10 +5,14 @@ import { colors } from "../themes";
 import BackButton from "../components/BackButton";
 import { useNavigation } from "@react-navigation/core";
 import { signUpWithFirebase } from "../services/authService";
+import { setUser } from "../redux/slices/user";
+import { useDispatch } from "react-redux";
 
 export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
   const handleSubmit = () => {
@@ -17,9 +21,7 @@ export default function SignUpScreen() {
 
       signUpWithFirebase(email, password)
         .then((res) => {
-          console.log(res);
-
-          navigation.goBack();
+          dispatch(setUser(res));
         })
         .catch((err) => {
           // USER IS INVALID

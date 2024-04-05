@@ -22,14 +22,7 @@ export default function SignInScreen() {
       signInWithFirebase(email, password)
         .then((res) => {
           // USER IS VALID, PROCESS AHEAD
-          if (res.uid)
-            dispatch(
-              setUser({
-                email: res.email,
-                emailVerified: res.emailVerified,
-                uid: res.uid,
-              })
-            );
+          dispatch(setUser(res));
         })
         .catch((err) => {
           // USER IS INVALID

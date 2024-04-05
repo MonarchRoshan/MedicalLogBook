@@ -1,18 +1,38 @@
-import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/HomeScreen";
-import WelcomeScreen from "../screens/WelcomeScreen";
+import { useSelector } from "react-redux";
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
-import { useSelector } from "react-redux";
+import WelcomeScreen from "../screens/WelcomeScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
+import { useEffect, useState } from "react";
+import { getDataFromAsyncStorage } from "../utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Stack = createNativeStackNavigator();
 export default function AppNavigation() {
-  const user = useSelector((state) => state.user.user);
-  // const user = false;
+  const userFromRedux = useSelector((state) => state.user.user);
 
-  if (user) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  console.log(userFromRedux, "user from redux");
+
+  const checkDataInStorage = () => {
+    getDataFromAsyncStorage("user").then((res) => {
+      console.log(res, "user from storage");
+      if (userFromRedux || res) {
+        // asdasdas
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+  };
+
+  useEffect(() => {
+    checkDataInStorage();
+  }, [userFromRedux, AsyncStorage]);
+
+  if (isLoggedIn) {
     return <BottomTabNavigator />;
   } else {
     return (

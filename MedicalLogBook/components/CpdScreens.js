@@ -1,34 +1,99 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, FlatList } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+  FlatList,
+  Button,
+} from "react-native";
+import { Dropdown } from "./Dropdown";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const CpdScreens = () => {
-  const [title, setTitle] = useState('');
-  const [notes, setNotes] = useState('');
-  const [cpdActivityType, setCpdActivityType] = useState('');
-  const [showCpdActivityTypeDropdown, setShowCpdActivityTypeDropdown] = useState(false);
+  const [title, setTitle] = useState("");
+  const [notes, setNotes] = useState("");
+  const [showStartDatePicker, setStartDatePicker] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [cpdActivityType, setCpdActivityType] = useState("");
+  const [showCpdActivityTypeDropdown, setShowCpdActivityTypeDropdown] =
+    useState(false);
 
-  const cpdActivityTypes = ['E-learning Completed', 'Training day', 'Course attended'];
+  const cpdActivityTypes = [
+    "E-learning Completed",
+    "Training day",
+    "Course attended",
+  ];
 
-  const handleDropdownSelect = (value, setValueFunction, setShowDropdownFunction) => {
+  const handleDropdownSelect = (
+    value,
+    setValueFunction,
+    setShowDropdownFunction
+  ) => {
     setValueFunction(value);
     setShowDropdownFunction(false);
   };
 
+  const toggleStartDatePicker = () => {
+    setStartDatePicker((prev) => !prev);
+  };
+
+  const handleFromDatePress = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    toggleStartDatePicker();
+    console.log(currentDate);
+    setStartDate(currentDate);
+  };
+
   const handleSave = () => {
     // Handle saving form data here
-    console.log('Form data saved:', { title, notes, cpdActivityType });
+    let updatedObj = {
+      title,
+      notes,
+      cpdActivityType,
+      startDate: new Date(startDate).toDateString(),
+    };
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 , marginTop: 60}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 60 }}>
       <View>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>CPD</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>
+          CPD
+        </Text>
       </View>
       <View style={{ padding: 20 }}>
+        <View className="flex-row mb-4">
+          <TextInput
+            className="border border-gray-400 rounded p-2 flex-1 mr-2"
+            placeholder="Choose From Date"
+            value={startDate.toDateString()}
+            editable={false}
+          />
+
+          <Button onPress={toggleStartDatePicker} title="Select" />
+
+          {showStartDatePicker && (
+            <DateTimePicker
+              testID="dateTimePickerSelectFrom"
+              value={startDate}
+              mode={"date"}
+              is24Hour={true}
+              onChange={handleFromDatePress}
+            />
+          )}
+        </View>
         <View style={{ marginBottom: 20 }}>
           <Text style={{ marginBottom: 2 }}>Title:</Text>
           <TextInput
-            style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 5, padding: 10 }}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              borderRadius: 5,
+              padding: 10,
+            }}
             placeholder="Enter title"
             value={title}
             onChangeText={(text) => setTitle(text)}
@@ -38,7 +103,12 @@ const CpdScreens = () => {
           <Text style={{ marginBottom: 2 }}>Notes:</Text>
           <TextInput
             multiline={true}
-            style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 5, padding: 10 }}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              borderRadius: 5,
+              padding: 10,
+            }}
             placeholder="Enter notes"
             value={notes}
             onChangeText={(text) => setNotes(text)}
@@ -50,49 +120,17 @@ const CpdScreens = () => {
           setValue={setCpdActivityType}
           options={cpdActivityTypes}
           showDropdown={showCpdActivityTypeDropdown}
+          handleDropdownSelect={handleDropdownSelect}
           setShowDropdown={setShowCpdActivityTypeDropdown}
         />
         <TouchableOpacity
-          style={{ backgroundColor: 'blue', padding: 10, borderRadius: 5 }}
+          style={{ backgroundColor: "blue", padding: 10, borderRadius: 5 }}
           onPress={handleSave}
         >
-          <Text style={{ color: 'white', textAlign: 'center' }}>Save</Text>
+          <Text style={{ color: "white", textAlign: "center" }}>Save</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
-  );
-};
-
-const Dropdown = ({ label, value, setValue, options, showDropdown, setShowDropdown }) => {
-  return (
-    <View style={{ marginBottom: 20 }}>
-      <Text style={{ marginBottom: 2 }}>{label}:</Text>
-      <TouchableOpacity
-        style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 5, padding: 10 }}
-        onPress={() => setShowDropdown(true)}
-      >
-        <Text>{value || `Select ${label}`}</Text>
-      </TouchableOpacity>
-      <Modal
-        transparent={true}
-        visible={showDropdown}
-        onRequestClose={() => setShowDropdown(false)}
-      >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-          <View style={{ backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
-            <FlatList
-              data={options}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleDropdownSelect(item, setValue, setShowDropdown)} style={{ padding: 10 }}>
-                  <Text style={{ color: 'blue', fontSize: 16 }}>{item}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </View>
-        </View>
-      </Modal>
-    </View>
   );
 };
 

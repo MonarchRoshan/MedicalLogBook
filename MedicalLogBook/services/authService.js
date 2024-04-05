@@ -2,7 +2,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../config/Firebase";
+import { auth, db } from "../config/Firebase";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { USER_COLLECTION } from "../constants";
+import { userSchema } from "../schema/userSchema";
 
 export const signUpWithFirebase = async (email, password) => {
   try {
@@ -12,12 +15,25 @@ export const signUpWithFirebase = async (email, password) => {
       password
     );
     // Signed up
-    const user = userCredential.user;
-    return user;
+    const userId = userCredential.user.uid;
+
+    let updatedObj = {
+      ...userSchema,
+      authDetails: {
+        ...userSchema.authDetails,
+        email: email,
+        userId: userId,
+      },
+    };
+
+    await setDoc(doc(db, USER_COLLECTION, userId), updatedObj);
+
+    return updatedObj;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
-    return { errorCode, errorMessage };
+    console.log({ errorCode, errorMessage });
+    // return { errorCode, errorMessage };
   }
 };
 
@@ -29,11 +45,21 @@ export const signInWithFirebase = async (email, password) => {
       password
     );
     // Signed up
-    const user = userCredential.user;
-    return user;
+    const userId = userCredential.user.uid;
+
+    let updatedObj = {
+      ...userSchema,
+      authDetails: {
+        ...userSchema.authDetails,
+        email: email,
+        userId: userId,
+      },
+    };
+
+    return updatedObj;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
-    return { errorCode, errorMessage };
+    console.log({ errorCode, errorMessage });
   }
 };

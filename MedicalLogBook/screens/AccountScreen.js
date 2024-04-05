@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, Button } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/slices/user";
+import {
+  getAllUsersDataService,
+  getSpecificUserService,
+} from "../services/userService";
+import {
+  clearAllDataFromAsyncStorage,
+  getDataFromAsyncStorage,
+} from "../utils";
 
 const AccountsScreen = () => {
   const [image, setImage] = useState(null);
+  const [email, setEmail] = useState("");
   const [listStyle, setListStyle] = useState("grid"); // or 'list'
   const [uiStyle, setUIStyle] = useState("dark"); // or 'light'
   const [themeColor, setThemeColor] = useState("#3498db"); // default color
@@ -13,6 +22,8 @@ const AccountsScreen = () => {
   const totalSizeOnDevice = "100 MB"; // example value
 
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.user);
 
   const toggleListStyle = () => {
     setListStyle((prevStyle) => (prevStyle === "grid" ? "list" : "grid"));
@@ -46,8 +57,18 @@ const AccountsScreen = () => {
 
   const handleLogout = () => {
     dispatch(setUser(null));
+    clearAllDataFromAsyncStorage();
     // Logout logic goes here
   };
+
+  const populateData = async () => {
+    console.log(user, "asdasd");
+    setEmail(user.email);
+  };
+
+  useEffect(() => {
+    populateData();
+  }, []);
 
   return (
     <View className={`justify-center items-center`}>
@@ -65,7 +86,7 @@ const AccountsScreen = () => {
       )}
 
       <View>
-        <Text className="text-center  mb-6">monarchosah033@gmail.com</Text>
+        <Text className="text-center  mb-6">{email}</Text>
       </View>
 
       <View className={`w-full px-4`}>
