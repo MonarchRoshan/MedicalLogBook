@@ -11,8 +11,11 @@ import {
 } from "react-native";
 import { Dropdown } from "./Dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { updateSpecificDataService } from "../services/userService";
+import { useSelector, useDispatch } from "react-redux";
+import { setLogbookData } from "../redux/slices/user";
 
-const CpdScreens = () => {
+const CpdScreens = ({ onClose }) => {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [showStartDatePicker, setStartDatePicker] = useState(false);
@@ -20,6 +23,9 @@ const CpdScreens = () => {
   const [cpdActivityType, setCpdActivityType] = useState("");
   const [showCpdActivityTypeDropdown, setShowCpdActivityTypeDropdown] =
     useState(false);
+
+  const userId = useSelector((state) => state.user.user.authDetails.userId);
+  const dispatch = useDispatch();
 
   const cpdActivityTypes = [
     "E-learning Completed",
@@ -49,12 +55,23 @@ const CpdScreens = () => {
 
   const handleSave = () => {
     // Handle saving form data here
-    let updatedObj = {
+    let dataObj = {
       title,
       notes,
       cpdActivityType,
       startDate: new Date(startDate).toDateString(),
     };
+
+    updateSpecificDataService(userId, "cpd", dataObj)
+      .then((res) => {
+        dispatch(setLogbookData({ keyName: "cpd", data: dataObj }));
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        onClose();
+      });
+
+    console.log(dataObj);
   };
 
   return (

@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getDataFromAsyncStorage, storeDataInAsyncStorage } from "../../utils";
-
+import { userSchema } from "../../schema/userSchema";
 // Define the initial state using that type
 const initialState = {
-  user: null,
+  user: {
+    ...userSchema,
+  },
   userLoading: false,
 };
 
@@ -17,6 +19,14 @@ export const userSlice = createSlice({
       state.user = action.payload;
       storeDataInAsyncStorage("user", action.payload);
     },
+    setLogbookData: (state, action) => {
+      state.user.userDetails[action.payload.keyName] = [
+        ...state.user.userDetails[action.payload.keyName],
+        action.payload.data,
+      ];
+
+      storeDataInAsyncStorage("user", state.user);
+    },
     setUserLoading: (state, action) => {
       state.userLoading = action.payload;
     },
@@ -26,6 +36,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, setUserLoading, clearUser } = userSlice.actions;
+export const { setUser, setUserLoading, clearUser, setLogbookData } =
+  userSlice.actions;
 
 export default userSlice.reducer;

@@ -6,6 +6,7 @@ import {
   getDocs,
   updateDoc,
   serverTimestamp,
+  arrayUnion,
 } from "firebase/firestore";
 import { USER_COLLECTION } from "../constants";
 
@@ -36,14 +37,15 @@ export const getSpecificUserService = async (uid) => {
   }
 };
 
-export const updateSpecificDataService = async (uid) => {
+export const updateSpecificDataService = async (uid, keyName, data) => {
   try {
     const docRef = doc(db, USER_COLLECTION, uid);
 
-    // Update the timestamp field with the value from the server
-    const updateTimestamp = await updateDoc(docRef, {
-      timestamp: serverTimestamp(),
+    let res = await updateDoc(docRef, {
+      [`userDetails.${keyName}`]: arrayUnion(data),
     });
+
+    return res;
   } catch (error) {
     console.log(error);
   }

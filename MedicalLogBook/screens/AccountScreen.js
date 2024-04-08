@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, Button } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../redux/slices/user";
+import { clearUser, setUser } from "../redux/slices/user";
 import {
   getAllUsersDataService,
   getSpecificUserService,
@@ -56,14 +56,14 @@ const AccountsScreen = () => {
   };
 
   const handleLogout = () => {
-    dispatch(setUser(null));
+    dispatch(clearUser());
     clearAllDataFromAsyncStorage();
     // Logout logic goes here
   };
 
   const populateData = async () => {
     console.log(user, "asdasd");
-    setEmail(user.email);
+    setEmail(user.authDetails?.email);
   };
 
   useEffect(() => {

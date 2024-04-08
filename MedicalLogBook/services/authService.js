@@ -6,6 +6,7 @@ import { auth, db } from "../config/Firebase";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { USER_COLLECTION } from "../constants";
 import { userSchema } from "../schema/userSchema";
+import { getSpecificUserService } from "./userService";
 
 export const signUpWithFirebase = async (email, password) => {
   try {
@@ -47,16 +48,9 @@ export const signInWithFirebase = async (email, password) => {
     // Signed up
     const userId = userCredential.user.uid;
 
-    let updatedObj = {
-      ...userSchema,
-      authDetails: {
-        ...userSchema.authDetails,
-        email: email,
-        userId: userId,
-      },
-    };
+    let result = await getSpecificUserService(userId);
 
-    return updatedObj;
+    return result;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;

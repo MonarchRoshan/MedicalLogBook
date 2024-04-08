@@ -1,6 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
+import { getSpecificUserService } from "../services/userService";
+import { useSelector } from "react-redux";
+import Loader from "../components/Loader";
 
 export default function HomeScreen() {
   const DataCard = ({ title, value }) => {
@@ -22,27 +25,52 @@ export default function HomeScreen() {
   };
 
   const Dashboard = () => {
+    const [state, setState] = useState({
+      cpd: 0,
+      admissions: 0,
+      procedure: 0,
+      clinics: 0,
+      week: 0,
+      month: 0,
+      total: 0,
+    });
+    const [loading, setLoading] = useState(true);
+
+    const userDetails = useSelector((state) => state.user.user.userDetails);
+
+    useEffect(() => {
+      setState({
+        ...state,
+        cpd: userDetails.cpd.length,
+        admissions: userDetails.admissions.length,
+        procedure: userDetails.procedure.length,
+        clinics: userDetails.clinics.length,
+      });
+    }, [userDetails]);
+
+    // if (loading) return <Loader />;
+
     return (
       <View className={styles.container}>
         <View>
           <Text className="text-xl font-bold mb-2">Activity analysis</Text>
         </View>
         <View className={`flex flex-row  mb-2 justify-between`}>
-          <SmallDataCard title="Week" value="123" />
-          <SmallDataCard title="Month" value="456" />
-          <SmallDataCard title="Total" value="456" />
+          <SmallDataCard title="Week" value={state.week} />
+          <SmallDataCard title="Month" value={state.month} />
+          <SmallDataCard title="Total" value={state.total} />
         </View>
 
         <View>
           <Text className="text-xl font-bold mb-2">Top logbook categories</Text>
         </View>
         <View className={`flex flex-row flex-wrap justify-between mb-2`}>
-          <DataCard title="CPD" value="123" />
-          <DataCard title="Admissions" value="456" />
+          <DataCard title="CPD" value={state.cpd} />
+          <DataCard title="Admissions" value={state.admissions} />
         </View>
         <View className={`flex flex-row flex-wrap justify-between `}>
-          <DataCard title="Procedures" value="789" />
-          <DataCard title="Clinics" value="101" />
+          <DataCard title="Procedures" value={state.procedure} />
+          <DataCard title="Clinics" value={state.clinics} />
         </View>
       </View>
     );

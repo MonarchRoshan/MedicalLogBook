@@ -9,8 +9,13 @@ import {
   FlatList,
 } from "react-native";
 import { Dropdown } from "./Dropdown";
+import { useSelector, useDispatch } from "react-redux";
+import { updateSpecificDataService } from "../services/userService";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Button } from "react-native";
+import { setLogbookData } from "../redux/slices/user";
 
-const ClinicsScreen = () => {
+const ClinicsScreen = ({ onClose }) => {
   const [clinic, setClinic] = useState("");
   const [notes, setNotes] = useState("");
   const [actions, setActions] = useState("");
@@ -22,6 +27,11 @@ const ClinicsScreen = () => {
   const [newPatient, setNewPatient] = useState("");
   const [problem, setProblem] = useState("");
   const [yourReference, setYourReference] = useState("");
+
+  const [showStartDatePicker, setStartDatePicker] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.user.authDetails.userId);
 
   const actionOptions = ["Follow-up", "New"];
   const seenByConsultantOptions = ["Yes", "No"];
@@ -36,9 +46,20 @@ const ClinicsScreen = () => {
     setShowDropdownFunction(false);
   };
 
+  const toggleStartDatePicker = () => {
+    setStartDatePicker((prev) => !prev);
+  };
+
+  const handleFromDatePress = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    toggleStartDatePicker();
+    console.log(currentDate);
+    setStartDate(currentDate);
+  };
+
   const handleSave = () => {
     // Handle saving form data here
-    console.log("Form data saved:", {
+    let dataObj = {
       clinic,
       notes,
       actions,
@@ -47,7 +68,16 @@ const ClinicsScreen = () => {
       newPatient,
       problem,
       yourReference,
-    });
+    };
+
+    updateSpecificDataService(userId, "clinics", dataObj)
+      .then((res) => {
+        dispatch(setLogbookData({ keyName: "clinics", data: dataObj }));
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        onClose();
+      });
   };
 
   return (
@@ -58,6 +88,26 @@ const ClinicsScreen = () => {
         </Text>
       </View>
       <View style={{ padding: 20 }}>
+        <View className="flex-row mb-4">
+          <TextInput
+            className="border border-gray-400 rounded p-2 flex-1 mr-2"
+            placeholder="Choose From Date"
+            value={startDate.toDateString()}
+            editable={false}
+          />
+
+          <Button onPress={toggleStartDatePicker} title="Select" />
+
+          {showStartDatePicker && (
+            <DateTimePicker
+              testID="dateTimePickerSelectFrom"
+              value={startDate}
+              mode={"date"}
+              is24Hour={true}
+              onChange={handleFromDatePress}
+            />
+          )}
+        </View>
         <View style={{ marginBottom: 20 }}>
           <Text style={{ marginBottom: 2 }}>Clinic Name:</Text>
           <TextInput

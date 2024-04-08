@@ -7,8 +7,13 @@ import {
   ScrollView,
 } from "react-native";
 import { Dropdown } from "./Dropdown";
+import { useSelector, useDispatch } from "react-redux";
+import { updateSpecificDataService } from "../services/userService";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Button } from "react-native";
+import { setLogbookData } from "../redux/slices/user";
 
-const ProceduresScreen = () => {
+const ProceduresScreen = ({ onClose }) => {
   const [Procedures, setProcedures] = useState("");
   const [Hospital, setHospital] = useState("");
   const [Supervision, setSupervision] = useState("");
@@ -18,6 +23,12 @@ const ProceduresScreen = () => {
   const [yourReference, setYourReference] = useState("");
   const [followUp, setFollowUp] = useState("");
   const [notes, setNotes] = useState("");
+
+  const [showStartDatePicker, setStartDatePicker] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+
+  const userId = useSelector((state) => state.user.user.authDetails.userId);
+  const dispatch = useDispatch();
 
   const SupervisionOptions = ["Assisted", "Assisting", "Observed"];
 
@@ -30,9 +41,20 @@ const ProceduresScreen = () => {
     setShowDropdownFunction(false);
   };
 
+  const toggleStartDatePicker = () => {
+    setStartDatePicker((prev) => !prev);
+  };
+
+  const handleFromDatePress = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    toggleStartDatePicker();
+    console.log(currentDate);
+    setStartDate(currentDate);
+  };
+
   const handleSave = () => {
     // Handle saving form data here
-    console.log("Form data saved:", {
+    let dataObj = {
       Procedures,
       Hospital,
       Supervision,
@@ -41,7 +63,16 @@ const ProceduresScreen = () => {
       yourReference,
       followUp,
       notes,
-    });
+    };
+
+    updateSpecificDataService(userId, "procedure", dataObj)
+      .then((res) => {
+        dispatch(setLogbookData({ keyName: "procedure", data: dataObj }));
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        onClose();
+      });
   };
 
   return (
@@ -52,6 +83,26 @@ const ProceduresScreen = () => {
         </Text>
       </View>
       <View style={{ padding: 20 }}>
+        <View className="flex-row mb-4">
+          <TextInput
+            className="border border-gray-400 rounded p-2 flex-1 mr-2"
+            placeholder="Choose From Date"
+            value={startDate.toDateString()}
+            editable={false}
+          />
+
+          <Button onPress={toggleStartDatePicker} title="Select" />
+
+          {showStartDatePicker && (
+            <DateTimePicker
+              testID="dateTimePickerSelectFrom"
+              value={startDate}
+              mode={"date"}
+              is24Hour={true}
+              onChange={handleFromDatePress}
+            />
+          )}
+        </View>
         <View style={{ marginBottom: 20 }}>
           <Text style={{ marginBottom: 2 }}>Procedures:</Text>
           <TextInput

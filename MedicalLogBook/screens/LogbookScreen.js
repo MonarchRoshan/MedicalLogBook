@@ -43,6 +43,9 @@ const LogbookScreen = () => {
   const openModal = (modalType) => {
     setModalType(modalType);
   };
+  const closeModal = () => {
+    setModalType(null);
+  };
 
   const openSpecificTodoForm = (data) => {
     openModal(data.category);
@@ -109,12 +112,14 @@ const LogbookScreen = () => {
         animationType="slide"
         transparent={false}
         visible={todos.some((todo) => todo.category === modalType)}
-        onRequestClose={() => setModalType(null)}
+        onRequestClose={closeModal}
       >
-        {modalType === "Admissions" && <AdmissionsScreen />}
-        {modalType === "CPD" && <CpdScreens />}
-        {modalType === "Clinics" && <ClinicsScreen />}
-        {modalType === "Procedure" && <ProcedureScreen />}
+        {modalType === "Admissions" && (
+          <AdmissionsScreen onClose={closeModal} />
+        )}
+        {modalType === "CPD" && <CpdScreens onClose={closeModal} />}
+        {modalType === "Clinics" && <ClinicsScreen onClose={closeModal} />}
+        {modalType === "Procedure" && <ProcedureScreen onClose={closeModal} />}
       </Modal>
     </View>
   );
