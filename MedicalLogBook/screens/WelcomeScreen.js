@@ -12,10 +12,14 @@ export default function () {
         <View className="flex-row justify-center mt-10"></View>
         <View className="mx-5 mb-20">
           <Text
-            className={`text-center font-bold text-4xl mb-10 ${colors.heading}`}
+            className={`text-center font-bold text-4xl  ${colors.heading}`}
           >
             Medical LogBook
           </Text>
+          <Image
+                className="h-100 w-80"
+                source={require("../assets/images/logobg.png")}
+              />
           <TouchableOpacity
             onPress={() => navigation.navigate("SignIn")}
             className="shadow p-3 rounded-full mb-5"
