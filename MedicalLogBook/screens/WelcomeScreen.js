@@ -9,13 +9,13 @@ export default function () {
   return (
     <ScreenWrapper>
       <View className="h-full flex justify-around">
-        <View className="flex-row justify-center mt-10"></View>
+        
         <View className="mx-5 mb-20">
-          <Text
-            className={`text-center font-bold text-4xl mb-10 ${colors.heading}`}
-          >
-            Medical LogBook
-          </Text>
+          
+          <Image
+                className="h-100 w-80"
+                source={require("../assets/images/logobg.png")}
+              />
           <TouchableOpacity
             onPress={() => navigation.navigate("SignIn")}
             className="shadow p-3 rounded-full mb-5"
@@ -34,7 +34,25 @@ export default function () {
               Sign Up
             </Text>
           </TouchableOpacity>
+          
+          <View style={{ alignItems: 'center', paddingTop:20, paddingBottom:20  }}>
+      <Text>Or Sign Up With Google</Text>
+      </View>
+
+      <TouchableOpacity 
+            onPress={() => navigation.navigate("SignUp")}
+            className="shadow p-3 rounded-full "
+            style={{ backgroundColor: colors.button }}
+          >
+            <Text className="text-center text-white text-lg font-bold ">
+              Sign Up With Google
+            </Text>
+          </TouchableOpacity>
+          
         </View>
+
+        
+        
       </View>
     </ScreenWrapper>
   );
