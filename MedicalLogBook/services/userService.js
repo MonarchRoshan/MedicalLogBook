@@ -9,6 +9,7 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { USER_COLLECTION } from "../constants";
+import axiosInstance from "../api";
 
 export const getAllUsersDataService = async () => {
   try {
