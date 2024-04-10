@@ -171,7 +171,16 @@ const AccountsScreen = () => {
         <Text className={`text-lg font-light`}>Total Size on Device</Text>
         <Text className={`mt-2 text-center`}>{totalSizeOnDevice}</Text>
       </View>
-      
+      <View
+        className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
+      >
+        <Text className={`text-lg font-light`}>Share With LinkedIn</Text>
+        <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
+          <Text className={`text-blue-500`}>
+            {uiStyle === "dark" ? ">" : ""}
+          </Text>
+        </TouchableOpacity>
+      </View>
       
       <View
         className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
@@ -185,7 +194,7 @@ const AccountsScreen = () => {
         <Text className={`text-lg font-light`}>Contact</Text>
         <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
           <Text className={`text-blue-500`}>
-            {uiStyle === "dark" ? ">" : "Light Mode"}
+            {uiStyle === "dark" ? ">" : ""}
           </Text>
         </TouchableOpacity>
       </View>
@@ -196,7 +205,7 @@ const AccountsScreen = () => {
         <Text className={`text-lg font-light`}>Terms and Conditions</Text>
         <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
           <Text className={`text-blue-500`}>
-            {uiStyle === "dark" ? ">" : "Light Mode"}
+            {uiStyle === "dark" ? ">" : ""}
           </Text>
         </TouchableOpacity>
       </View>
@@ -207,7 +216,7 @@ const AccountsScreen = () => {
         <Text className={`text-lg font-light`}>Privacy Policy</Text>
         <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
           <Text className={`text-blue-500`}>
-            {uiStyle === "dark" ? ">" : "Light Mode"}
+            {uiStyle === "dark" ? ">" : ""}
           </Text>
         </TouchableOpacity>
       </View>
