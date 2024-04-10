@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, Button } from "react-native";
+import { View, Text, TouchableOpacity, Image, Button, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser, setUser } from "../redux/slices/user";
@@ -71,6 +71,7 @@ const AccountsScreen = () => {
   }, []);
 
   return (
+    <ScrollView contentContainerStyle={{ flexGrow: 1, }}>
     <View className={`justify-center items-center`}>
       {image ? (
         <>
@@ -159,6 +160,8 @@ const AccountsScreen = () => {
         </View>
       </View>
 
+      
+
       <View className={`mb-4`}>
         <Text className={`text-lg font-light`}>Total Attachment</Text>
         <Text className={`mt-2 text-center`}>{totalAttachment}</Text>
@@ -167,6 +170,46 @@ const AccountsScreen = () => {
       <View>
         <Text className={`text-lg font-light`}>Total Size on Device</Text>
         <Text className={`mt-2 text-center`}>{totalSizeOnDevice}</Text>
+      </View>
+      
+      
+      <View
+        className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
+      >
+        <Text className={`text-lg font-light`}>Support</Text>
+        
+      </View>
+      <View
+        className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
+      >
+        <Text className={`text-lg font-light`}>Contact</Text>
+        <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
+          <Text className={`text-blue-500`}>
+            {uiStyle === "dark" ? ">" : "Light Mode"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View
+        className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
+      >
+        <Text className={`text-lg font-light`}>Terms and Conditions</Text>
+        <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
+          <Text className={`text-blue-500`}>
+            {uiStyle === "dark" ? ">" : "Light Mode"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View
+        className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
+      >
+        <Text className={`text-lg font-light`}>Privacy Policy</Text>
+        <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
+          <Text className={`text-blue-500`}>
+            {uiStyle === "dark" ? ">" : "Light Mode"}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View className={`w-full px-4`}>
@@ -178,6 +221,7 @@ const AccountsScreen = () => {
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 };
 
