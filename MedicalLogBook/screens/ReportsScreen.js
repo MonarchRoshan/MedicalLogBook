@@ -9,6 +9,9 @@ import {
   Text,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Dropdown } from "../components/Dropdown";
+
+const REPORT_TYPES = ["Admissions", "CPD", "Clinics", "Procedure"];
 
 const MyForm = () => {
   const [formData, setFormData] = useState({
@@ -18,7 +21,7 @@ const MyForm = () => {
     toDate: new Date(),
     typeModalVisible: false,
     fileFormatModalVisible: false,
-    type: "",
+    type: REPORT_TYPES[0],
     fileFormat: "",
   });
 
@@ -58,6 +61,15 @@ const MyForm = () => {
       fileFormat: selectedFormat,
       fileFormatModalVisible: false,
     });
+  };
+
+  const handleDropdownSelect = (
+    value,
+    setValueFunction,
+    setShowDropdownFunction
+  ) => {
+    setValueFunction(value);
+    setShowDropdownFunction(false);
   };
 
   const handleDownload = () => {
@@ -124,14 +136,15 @@ const MyForm = () => {
           />
         )}
       </View>
-      <TouchableOpacity
-        onPress={() => setFormData({ ...formData, typeModalVisible: true })}
-        className="border border-gray-400 rounded p-2 mb-4"
-      >
-        <Text className="text-gray-600">
-          {formData.type ? formData.type : "Select Type"}
-        </Text>
-      </TouchableOpacity>
+      <Dropdown
+        label="Select Report type"
+        value={formData.type}
+        setValue={() => {}}
+        options={REPORT_TYPES}
+        showDropdown={false}
+        handleDropdownSelect={handleDropdownSelect}
+        setShowDropdown={() => {}}
+      />
       <Modal
         animationType="slide"
         transparent={true}
