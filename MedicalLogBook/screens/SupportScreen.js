@@ -31,7 +31,7 @@ const ContactForm = () => {
         keyboardType="email-address"
       />
       <TextInput
-        style={[styles.input, { height: 100 }]} // Adjusting height for message input
+        style={[styles.input, { height: 100 }]} 
         placeholder="Message"
         value={message}
         onChangeText={text => setMessage(text)}
