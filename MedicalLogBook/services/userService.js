@@ -1,10 +1,21 @@
-import axiosInstance from "../api";
+import { db } from "../config/Firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  serverTimestamp,
+  arrayUnion,
+} from "firebase/firestore";
+import { USER_COLLECTION } from "../constants";
 
 export const getAllUsersDataService = async () => {
   try {
-    let response = await axiosInstance.get("/users");
-
-    return response.data;
+    const querySnapshot = await getDocs(collection(db, USER_COLLECTION));
+    let userArr = [];
+    querySnapshot.forEach((doc) => userArr.push(doc.data()));
+    return userArr;
   } catch (error) {
     console.log(error);
   }
@@ -12,9 +23,15 @@ export const getAllUsersDataService = async () => {
 
 export const getSpecificUserService = async (uid) => {
   try {
-    let response = await axiosInstance.get(`/users/${uid}`);
+    const docRef = doc(db, USER_COLLECTION, uid);
+    const docSnap = await getDoc(docRef);
 
-    return response.data;
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
   } catch (error) {
     console.log(error);
   }
@@ -22,20 +39,13 @@ export const getSpecificUserService = async (uid) => {
 
 export const updateSpecificDataService = async (uid, keyName, data) => {
   try {
-    let response = await axiosInstance.patch(
-      `/users/${uid}`,
-      {
-        keyName,
-        data,
-      },
-      {
-        params: {
-          uid,
-        },
-      }
-    );
+    const docRef = doc(db, USER_COLLECTION, uid);
 
-    return response.data;
+    let res = await updateDoc(docRef, {
+      [`userDetails.${keyName}`]: arrayUnion(data),
+    });
+
+    return res;
   } catch (error) {
     console.log(error);
   }

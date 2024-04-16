@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomCamera from "../components/CustomCamera";
 import { clearUser } from "../redux/slices/user";
 import { clearAllDataFromAsyncStorage } from "../utils";
+import { showSnackbar } from "../redux/slices/snackbar";
 
 const AccountsScreen = () => {
   const [image, setImage] = useState(null);
@@ -54,6 +55,7 @@ const AccountsScreen = () => {
   const handleLogout = () => {
     dispatch(clearUser());
     clearAllDataFromAsyncStorage();
+    dispatch(showSnackbar({ message: "You have been logged out" }));
     // Logout logic goes here
   };
 
