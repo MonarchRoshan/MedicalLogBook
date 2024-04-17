@@ -13,7 +13,7 @@ import { updateSpecificDataService } from "../services/userService";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button } from "react-native";
 import { setLogbookData } from "../redux/slices/user";
-import {CameraButton} from "../components/CameraButton"
+import { CameraButton } from "../components/CameraButton";
 
 const ProceduresScreen = ({ onClose }) => {
   const [Procedures, setProcedures] = useState("");
@@ -53,7 +53,6 @@ const ProceduresScreen = ({ onClose }) => {
     console.log(currentDate);
     setStartDate(currentDate);
   };
-  
 
   const handleSave = () => {
     // Handle saving form data here
@@ -68,8 +67,6 @@ const ProceduresScreen = ({ onClose }) => {
       notes,
     };
 
-    
-
     updateSpecificDataService(userId, "procedure", dataObj)
       .then((res) => {
         dispatch(setLogbookData({ keyName: "procedure", data: dataObj }));
@@ -81,9 +78,9 @@ const ProceduresScreen = ({ onClose }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1, }}>
-      <View className='mt-20'>
-        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center"  }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View className="mt-20">
+        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>
           Procedures
         </Text>
       </View>
@@ -104,6 +101,7 @@ const ProceduresScreen = ({ onClose }) => {
               value={startDate}
               mode={"date"}
               is24Hour={true}
+              maximumDate={new Date()}
               onChange={handleFromDatePress}
             />
           )}
@@ -226,18 +224,9 @@ const ProceduresScreen = ({ onClose }) => {
         >
           <Text style={{ color: "white", textAlign: "center" }}>Save</Text>
         </TouchableOpacity>
-         
-      
-        
-
-    
       </View>
     </ScrollView>
-
-    
   );
 };
-
-
 
 export default ProceduresScreen;

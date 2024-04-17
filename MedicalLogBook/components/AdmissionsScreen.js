@@ -119,6 +119,7 @@ const AdmissionScreen = ({ onClose }) => {
               value={startDate}
               mode={"date"}
               is24Hour={true}
+              maximumDate={new Date()}
               onChange={handleFromDatePress}
             />
           )}

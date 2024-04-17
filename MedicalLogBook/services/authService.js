@@ -1,35 +1,13 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { auth, db } from "../config/Firebase";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
-import { USER_COLLECTION } from "../constants";
-import { userSchema } from "../schema/userSchema";
-import { getSpecificUserService } from "./userService";
+import axiosInstance from "../api";
 
 export const signUpWithFirebase = async (email, password) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
+    let response = await axiosInstance.post("/signup", {
       email,
-      password
-    );
-    // Signed up
-    const userId = userCredential.user.uid;
+      password,
+    });
 
-    let updatedObj = {
-      ...userSchema,
-      authDetails: {
-        ...userSchema.authDetails,
-        email: email,
-        userId: userId,
-      },
-    };
-
-    await setDoc(doc(db, USER_COLLECTION, userId), updatedObj);
-
-    return updatedObj;
+    return response.data;
   } catch (error) {
     console.log(error);
     return error;
@@ -38,17 +16,12 @@ export const signUpWithFirebase = async (email, password) => {
 
 export const signInWithFirebase = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
+    let response = await axiosInstance.post("/login", {
       email,
-      password
-    );
-    // Signed up
-    const userId = userCredential.user.uid;
+      password,
+    });
 
-    let result = await getSpecificUserService(userId);
-
-    return result;
+    return response.data;
   } catch (error) {
     console.log(error);
     return error;

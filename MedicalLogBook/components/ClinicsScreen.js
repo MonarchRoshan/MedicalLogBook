@@ -102,6 +102,7 @@ const ClinicsScreen = ({ onClose }) => {
             <DateTimePicker
               testID="dateTimePickerSelectFrom"
               value={startDate}
+              maximumDate={new Date()}
               mode={"date"}
               is24Hour={true}
               onChange={handleFromDatePress}
