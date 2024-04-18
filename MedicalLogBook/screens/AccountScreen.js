@@ -6,12 +6,13 @@ import CustomCamera from "../components/CustomCamera";
 import { clearUser } from "../redux/slices/user";
 import { clearAllDataFromAsyncStorage } from "../utils";
 import { showSnackbar } from "../redux/slices/snackbar";
+import { toggleTheme } from "../redux/slices/theme";
 
-const AccountsScreen = () => {
+const AccountsScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [email, setEmail] = useState("");
   const [listStyle, setListStyle] = useState("grid"); // or 'list'
-  const [uiStyle, setUIStyle] = useState("dark"); // or 'light'
+
   const [themeColor, setThemeColor] = useState("#3498db"); // default color
   const totalAttachment = 10; // example value
   const totalSizeOnDevice = "100 MB"; // example value
@@ -20,12 +21,14 @@ const AccountsScreen = () => {
 
   const user = useSelector((state) => state.user.user);
 
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
+
   const toggleListStyle = () => {
     setListStyle((prevStyle) => (prevStyle === "grid" ? "list" : "grid"));
   };
 
-  const toggleUIStyle = () => {
-    setUIStyle((prevStyle) => (prevStyle === "dark" ? "light" : "dark"));
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme());
   };
 
   const changeThemeColor = (color) => {
@@ -67,9 +70,18 @@ const AccountsScreen = () => {
     populateData();
   }, []);
 
+  const goToContact = () => {
+    navigation.navigate("Support");
+  };
+
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View className={`justify-center items-center`}>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        backgroundColor: isDarkMode ? "black" : "white",
+      }}
+    >
+      <View className={`justify-center items-center `}>
         {image ? (
           <TouchableOpacity onPress={pickImage}>
             <Image
@@ -108,21 +120,10 @@ const AccountsScreen = () => {
         <View
           className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
         >
-          <Text className={`text-lg font-light`}>List Style</Text>
-          <TouchableOpacity onPress={toggleListStyle} className={``}>
-            <Text className={`text-blue-500`}>
-              {listStyle === "grid" ? "Grid View" : "List View"}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View
-          className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
-        >
           <Text className={`text-lg font-light`}>UI Style</Text>
-          <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
+          <TouchableOpacity onPress={handleToggleTheme} className={`mt-2`}>
             <Text className={`text-blue-500`}>
-              {uiStyle === "dark" ? "Dark Mode" : "Light Mode"}
+              {isDarkMode ? "Dark Mode" : "Light Mode"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -166,58 +167,9 @@ const AccountsScreen = () => {
           <Text className={`text-lg font-light`}>Total Size on Device</Text>
           <Text className={`mt-2 text-center`}>{totalSizeOnDevice}</Text>
         </View>
-        <View
-          className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
-        >
-          <Text className={`text-lg font-light`}>Share With LinkedIn</Text>
-          <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
-            <Text className={`text-blue-500`}>
-              {uiStyle === "dark" ? ">" : ""}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View
-          className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
-        >
-          <Text className={`text-lg font-light`}>Support</Text>
-        </View>
-        <View
-          className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
-        >
-          <Text className={`text-lg font-light`}>Contact</Text>
-          <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
-            <Text className={`text-blue-500`}>
-              {uiStyle === "dark" ? ">" : ""}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View
-          className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
-        >
-          <Text className={`text-lg font-light`}>Terms and Conditions</Text>
-          <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
-            <Text className={`text-blue-500`}>
-              {uiStyle === "dark" ? ">" : ""}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View
-          className={`mb-4 flex flex-row items-center justify-between w-full px-4`}
-        >
-          <Text className={`text-lg font-light`}>Privacy Policy</Text>
-          <TouchableOpacity onPress={toggleUIStyle} className={`mt-2`}>
-            <Text className={`text-blue-500`}>
-              {uiStyle === "dark" ? ">" : ""}
-            </Text>
-          </TouchableOpacity>
-        </View>
 
         <View className={`w-full px-4`}>
           <TouchableOpacity
-            onPress={handleLogout}
             className={`bg-gray-500 px-4 py-3 rounded-full mt-4`}
           >
             <Text className={`text-white text-center`}>Logout</Text>

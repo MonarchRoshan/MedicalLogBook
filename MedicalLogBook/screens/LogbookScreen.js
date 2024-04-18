@@ -70,7 +70,7 @@ const LogbookScreen = () => {
 
   return (
     <View className="flex-1 p-4">
-      <View className="flex-row justify-between items-center mb-4">
+      {/* <View className="flex-row justify-between items-center mb-4">
         <TextInput
           className="flex-1 border border-gray-300 rounded-full px-4 py-2 "
           placeholder="Search..."
@@ -85,8 +85,8 @@ const LogbookScreen = () => {
         <TouchableOpacity className="bg-blue-500 text-white py-2 px-4 rounded-md">
           <Text>Sort</Text>
         </TouchableOpacity>
-        {/* Render categories here */}
-      </View>
+       
+      </View> */}
 
       <View>
         <Text>

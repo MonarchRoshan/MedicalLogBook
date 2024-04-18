@@ -4,6 +4,7 @@ import ScreenWrapper from "../components/ScreenWrapper";
 import { getSpecificUserService } from "../services/userService";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
+import moment from "moment";
 
 export default function HomeScreen() {
   const DataCard = ({ title, value }) => {
@@ -38,13 +39,53 @@ export default function HomeScreen() {
 
     const userDetails = useSelector((state) => state.user.user.userDetails);
 
+    const getThisWeekEvents = (data) => {
+      const startDateOfWeek = moment().startOf("week").toDate();
+      const endDateOfWeek = moment().endOf("week").toDate();
+      return data.filter((event) => {
+        const eventStartDate = moment(event.startDate).toDate();
+        return (
+          eventStartDate >= startDateOfWeek && eventStartDate <= endDateOfWeek
+        );
+      })?.length;
+    };
+
+    const getThisMonthEvents = (data) => {
+      const startDateOfMonth = moment().startOf("month").toDate();
+      const endDateOfMonth = moment().endOf("month").toDate();
+
+      // Filter events that fall within the current month
+      return data.filter((event) => {
+        const eventStartDate = moment(event.startDate).toDate();
+        return (
+          eventStartDate >= startDateOfMonth && eventStartDate <= endDateOfMonth
+        );
+      })?.length;
+    };
+
     useEffect(() => {
+      let totalLength =
+        userDetails.cpd.length +
+        userDetails.admissions.length +
+        userDetails.procedure.length +
+        userDetails.clinics.length;
+
+      const allData = [
+        ...userDetails.cpd,
+        ...userDetails.admissions,
+        ...userDetails.procedure,
+        ...userDetails.clinics,
+      ];
+
       setState({
         ...state,
         cpd: userDetails.cpd.length,
         admissions: userDetails.admissions.length,
         procedure: userDetails.procedure.length,
         clinics: userDetails.clinics.length,
+        total: totalLength,
+        week: getThisWeekEvents(allData),
+        month: getThisMonthEvents(allData),
       });
     }, [userDetails]);
 

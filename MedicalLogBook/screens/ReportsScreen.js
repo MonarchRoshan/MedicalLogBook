@@ -9,17 +9,153 @@ import {
   Text,
   ScrollView,
   Linking,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Dropdown } from "../components/Dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { showSnackbar } from "../redux/slices/snackbar";
 import moment from "moment";
-import * as FileSystem from "expo-file-system";
+
+import Icon from "react-native-vector-icons/FontAwesome";
+import { json2csv } from "json-2-csv";
 
 const reportTypes = ["Admissions", "CPD", "Clinics", "Procedure"];
 
 const fileFormatTypes = ["CSV", "PDF"];
+
+const ReportSection = ({ reports }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.heading}>Previously created reports</Text>
+      <ScrollView
+        horizontal
+        style={{ alignSelf: "center", marginVertical: 20 }}
+      >
+        <View>
+          <View style={[styles.row, styles.header]}>
+            <Text style={[styles.cell, { textAlign: "left" }]}>Srno.</Text>
+            <Text style={[styles.cell, { textAlign: "left" }]}>Date</Text>
+            <Text style={[styles.cell, { textAlign: "left" }]}>File Name</Text>
+            {/* <Text style={styles.cell}></Text> */}
+          </View>
+          {reports.map((report, index) => (
+            <View key={index} style={styles.row}>
+              <Text style={styles.cell}>{index + 1}</Text>
+              <Text style={styles.cell}>{report.date}</Text>
+              <Text style={styles.cell}>{report.fileName}</Text>
+              <TouchableOpacity>
+                <Icon name="download" size={16} color="black" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     marginTop: 20,
+
+//     paddingHorizontal: 10,
+//   },
+//   heading: {
+//     fontSize: 20,
+//     fontWeight: "bold",
+//     marginBottom: 10,
+//     textAlign: "center",
+//   },
+//   row: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     borderBottomWidth: 1,
+//     borderBottomColor: "#ccc",
+//     paddingVertical: 10,
+//   },
+//   header: {
+//     backgroundColor: "#f0f0f0",
+//     borderTopWidth: 1,
+//     borderTopColor: "#ccc",
+//   },
+//   cell: {
+//     flex: 1,
+//     marginHorizontal: 25,
+//     textAlign: "center",
+//   },
+// });
+
+const TableComponent = ({ data }) => {
+  // Check if data is available
+  if (!data || data.length === 0) {
+    return <Text>No data available</Text>;
+  }
+
+  // Extract keys from the first object in the array
+  const keys = Object.keys(data[0]);
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        {keys.map((key) => (
+          <Text key={key} style={styles.headerText}>
+            {key}
+          </Text>
+        ))}
+      </View>
+      <View style={styles.body}>
+        {data.map((item, index) => (
+          <View key={index} style={styles.row}>
+            {keys.map((key) => (
+              <Text key={key} style={styles.cell}>
+                {item[key]}
+              </Text>
+            ))}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    borderWidth: 1,
+    borderColor: "#000",
+    marginBottom: 10,
+  },
+  header: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    backgroundColor: "#f0f0f0",
+  },
+  headerText: {
+    flex: 1,
+    textAlign: "center",
+    padding: 10,
+    fontWeight: "bold",
+  },
+  body: {
+    flexDirection: "column",
+  },
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  cell: {
+    flex: 1,
+    textAlign: "center",
+    padding: 10,
+  },
+});
 
 const MyForm = () => {
   const [formData, setFormData] = useState({
@@ -38,6 +174,8 @@ const MyForm = () => {
 
   const [fileFormat, setFileFormat] = useState("");
   const [showFileFormatDropdown, setShowFileFormatDropdown] = useState(false);
+
+  const [reports, setReports] = useState([]);
 
   const dispatch = useDispatch();
   const toggleStartDatePicker = () => {
@@ -68,36 +206,11 @@ const MyForm = () => {
     setShowDropdownFunction(false);
   };
 
-  const convertJsonToCsv = async (data) => {
-    try {
-      const csvData = convertToCSV(data);
-
-      const fileUri = FileSystem.documentDirectory + "data.csv";
-      await FileSystem.writeAsStringAsync(fileUri, csvData);
-
-      console.log(data);
-      console.table(csvData);
-      console.log(fileUri);
-
-      // Open the file for download
-      Linking.openURL(fileUri);
-
-      dispatch(
-        showSnackbar({
-          message:
-            "Your selected file will be downloaded based on form inputs at ",
-        })
-      );
-    } catch (error) {
-      console.error("Error converting JSON to CSV:", error);
-
-      dispatch(
-        showSnackbar({
-          message: "Failed to create CSV file.",
-        })
-      );
-    }
-  };
+  // const reports = [
+  //   { date: "2024-04-19", fileName: "report1.pdf" },
+  //   { date: "2024-04-18", fileName: "report2.pdf" },
+  //   // Add more report objects as needed
+  // ];
 
   const handleDownload = () => {
     const currentDataArray = [...userDetails[reportType.toLocaleLowerCase()]];
@@ -121,30 +234,13 @@ const MyForm = () => {
         })
         .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
-      convertJsonToCsv(filteredData)
-        .then((res) => {})
-        .catch((error) => {});
+      // conversionV2(filteredData);
 
-      console.log(filteredData);
+      // conversion3(filteredData);
+      setReports(filteredData);
+
+      // console.log(filteredData, "filterd");
     }
-  };
-
-  const convertToCSV = (objArray) => {
-    var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
-    var str = "";
-
-    for (var i = 0; i < array.length; i++) {
-      var line = "";
-      for (var index in array[i]) {
-        if (line != "") line += ",";
-
-        line += array[i][index];
-      }
-
-      str += line + "\r\n";
-    }
-
-    return str;
   };
 
   const isDownloadAllowed = reportType.length > 0 && fileFormat.length > 0;
@@ -229,23 +325,18 @@ const MyForm = () => {
         />
 
         <Button
-          title="Download"
+          title="Get Analysis Report"
           onPress={handleDownload}
           disabled={!isDownloadAllowed}
         />
+
+        <View>
+          {/* <ReportSection reports={reports} /> */}
+          <TableComponent data={reports} />
+        </View>
       </View>
     </ScrollView>
   );
 };
 
 export default MyForm;
-
-// server {
-//   listen 5000 default_server;
-//   server_name _;
-
-//   # node api reverse proxy
-//   location / {
-//     proxy_pass http://localhost:5000/;
-//   }
-// }
