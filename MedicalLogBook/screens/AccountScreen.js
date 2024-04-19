@@ -59,7 +59,7 @@ const AccountsScreen = ({ navigation }) => {
     dispatch(clearUser());
     clearAllDataFromAsyncStorage();
     dispatch(showSnackbar({ message: "You have been logged out" }));
-    // Logout logic goes here
+    
   };
 
   const populateData = async () => {
