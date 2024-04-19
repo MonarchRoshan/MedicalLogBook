@@ -170,6 +170,7 @@ const AccountsScreen = ({ navigation }) => {
 
         <View className={`w-full px-4`}>
           <TouchableOpacity
+          onPress={handleLogout}
             className={`bg-gray-500 px-4 py-3 rounded-full mt-4`}
           >
             <Text className={`text-white text-center`}>Logout</Text>

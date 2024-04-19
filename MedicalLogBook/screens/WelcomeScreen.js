@@ -35,19 +35,7 @@ export default function () {
             </Text>
           </TouchableOpacity>
           
-          <View style={{ alignItems: 'center', paddingTop:20, paddingBottom:20  }}>
-      <Text>Or Sign Up With Google</Text>
-      </View>
-
-      <TouchableOpacity 
-            onPress={() => navigation.navigate("SignUp")}
-            className="shadow p-3 rounded-full "
-            style={{ backgroundColor: colors.button }}
-          >
-            <Text className="text-center text-white text-lg font-bold ">
-              Sign Up With Google
-            </Text>
-          </TouchableOpacity>
+          
           
         </View>
 
