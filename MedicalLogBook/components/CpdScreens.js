@@ -14,7 +14,10 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { updateSpecificDataService } from "../services/userService";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogbookData } from "../redux/slices/user";
-
+import BackButton from "./BackButton";
+import GalleryButton from "../components/GalleryButton.js"
+import CameraButton from "./CameraButton.js";
+import AttachmentButton from "./AttachmentBotton.js";
 const CpdScreens = ({ onClose }) => {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
@@ -76,8 +79,11 @@ const CpdScreens = ({ onClose }) => {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, marginTop: 60 }}>
+      <View className="absolute top-0 left-0 ml-2">
+                    <BackButton />
+                  </View>
       <View>
-        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>
+        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" , marginTop:20}}>
           CPD
         </Text>
       </View>
@@ -148,6 +154,10 @@ const CpdScreens = ({ onClose }) => {
           <Text style={{ color: "white", textAlign: "center" }}>Save</Text>
         </TouchableOpacity>
       </View>
+       <Text style={{marginTop:10, marginLeft:20, fontWeight: "bold"}}>Attachments</Text>
+      <View style={{marginLeft:200}}><GalleryButton/></View>
+      <View style={{marginLeft:250, marginTop:-33}}><CameraButton/></View>
+      <View style={{marginLeft:325, marginTop:-33}}><AttachmentButton/></View>
     </ScrollView>
   );
 };

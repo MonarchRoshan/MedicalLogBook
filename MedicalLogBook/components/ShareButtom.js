@@ -26,7 +26,7 @@ const ShareButton = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Share" onPress={onShare} />
+      <Button title=">" onPress={onShare} />
     </View>
   );
 };

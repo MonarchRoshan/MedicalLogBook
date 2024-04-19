@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import TermsAndConditionsScreen from "./TermsAndConditionsScreen";
+import BackButton from "../components/BackButton";
+import ShareButton from "../components/ShareButtom";
 
 const ContactForm = () => {
   const [name, setName] = useState("");
@@ -34,7 +36,11 @@ const ContactForm = () => {
   };
 
   return (
+    
     <View style={styles.container}>
+      <View className="absolute top-0 left-0">
+                    <BackButton />
+                  </View>
       <Text style={styles.header}>Request Support</Text>
       <Text style={styles.text}>
         Please fill in the details below to submit a support request.We will
@@ -71,7 +77,8 @@ const ContactForm = () => {
         }}
       >
         <Text className={`text-lg font-light`}>Share</Text>
-        <Text className={`text-blue-500`}>{">"} </Text>
+        <Text className={`text-blue-500`}></Text>
+         <ShareButton/>
       </TouchableOpacity>
 
       <TouchableOpacity

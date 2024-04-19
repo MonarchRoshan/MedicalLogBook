@@ -1,9 +1,15 @@
 import React from "react";
-import { ScrollView, Text, StyleSheet } from "react-native";
+import { ScrollView, Text, StyleSheet,View } from "react-native";
+import BackButton from "../components/BackButton";
 
 const TermsAndConditionsScreen = () => {
   return (
     <ScrollView style={styles.container}>
+      <View className="absolute top-0 left-0 my-5 ">
+                    <BackButton />
+                  </View>
+      <View style={{marginTop:55}}>   
+             
       <Text style={styles.title}>Terms and Conditions</Text>
       <Text style={styles.sectionTitle}>1. Acceptance of Terms</Text>
       <Text>
@@ -21,6 +27,7 @@ const TermsAndConditionsScreen = () => {
         Medical Logbook.
       </Text>
       {/* Repeat the above pattern for each section of the terms and conditions */}
+      </View>
     </ScrollView>
   );
 };

@@ -14,6 +14,10 @@ import { updateSpecificDataService } from "../services/userService";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button } from "react-native";
 import { setLogbookData } from "../redux/slices/user";
+import BackButton from "./BackButton";
+import CameraButton from "./CameraButton";
+import GalleryButton from "./GalleryButton";
+import AttachmentButton from "./AttachmentBotton";
 
 const ClinicsScreen = ({ onClose }) => {
   const [clinic, setClinic] = useState("");
@@ -82,6 +86,9 @@ const ClinicsScreen = ({ onClose }) => {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View className="absolute top-0 left-0 mt-12 ml-2">
+                    <BackButton />
+                  </View>
       <View style={{ marginTop: 50 }}>
         <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>
           Clinics
@@ -215,6 +222,10 @@ const ClinicsScreen = ({ onClose }) => {
           <Text style={{ color: "white", textAlign: "center" }}>Save</Text>
         </TouchableOpacity>
       </View>
+      <Text style={{marginTop:10, marginLeft:20, fontWeight: "bold"}}>Attachments</Text>
+      <View style={{marginLeft:200}}><GalleryButton/></View>
+      <View style={{marginLeft:250, marginTop:-33}}><CameraButton/></View>
+      <View style={{marginLeft:325, marginTop:-33}}><AttachmentButton/></View>
     </ScrollView>
   );
 };

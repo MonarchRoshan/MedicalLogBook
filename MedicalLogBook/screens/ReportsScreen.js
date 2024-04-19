@@ -331,8 +331,10 @@ const MyForm = () => {
         />
 
         <View>
+        <ScrollView horizontal>
           {/* <ReportSection reports={reports} /> */}
           <TableComponent data={reports} />
+          </ScrollView>
         </View>
       </View>
     </ScrollView>
