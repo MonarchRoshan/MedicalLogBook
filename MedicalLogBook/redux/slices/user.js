@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getDataFromAsyncStorage, storeDataInAsyncStorage } from "../../utils";
 import { userSchema } from "../../schema/userSchema";
-// Define the initial state using that type
+//  the initial state using that type
 const initialState = {
   user: {
     ...userSchema,

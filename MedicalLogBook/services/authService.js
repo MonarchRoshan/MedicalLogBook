@@ -1,5 +1,6 @@
 import axiosInstance from "../api";
-
+//functions > fire store > user collections > auth data(Curd)
+// firebase auth 
 export const signUpWithFirebase = async (email, password) => {
   try {
     let response = await axiosInstance.post("/signup", {

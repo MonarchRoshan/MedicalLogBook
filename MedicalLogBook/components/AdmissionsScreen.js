@@ -14,7 +14,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateSpecificDataService } from "../services/userService";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { setLogbookData, setUser } from "../redux/slices/user";
-
+import BackButton from "./BackButton.js";
+import GalleryButton from "./GalleryButton.js";
+import CameraButton from "./CameraButton.js";
+import AttachmentButton from "./AttachmentBotton.js";
 const AdmissionScreen = ({ onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -98,8 +101,12 @@ const AdmissionScreen = ({ onClose }) => {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View className="absolute top-0 left-0 mt-12 ml-1">
+                    <BackButton />
+                  </View>
       <View>
-        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>
+      
+        <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center", marginTop:60 }}>
           Admissions
         </Text>
       </View>
@@ -270,6 +277,10 @@ const AdmissionScreen = ({ onClose }) => {
           <Text style={{ color: "white", textAlign: "center" }}>Save</Text>
         </TouchableOpacity>
       </View>
+      <Text style={{marginTop:10, marginLeft:20, fontWeight: "bold"}}>Attachments</Text>
+      <View style={{marginLeft:200}}><GalleryButton/></View>
+      <View style={{marginLeft:250, marginTop:-33}}><CameraButton/></View>
+      <View style={{marginLeft:325, marginTop:-33}}><AttachmentButton/></View>
     </ScrollView>
   );
 };

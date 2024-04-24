@@ -22,8 +22,8 @@ export default function CameraButton() {
       ) : (
         <TouchableOpacity onPress={() => console.log('Open camera')}>
           <View style={styles.button}>
-            <MaterialIcons name="camera" size={24} color="white" />
-            <Text style={styles.buttonText}>Open Camera</Text>
+            <MaterialIcons name="camera" size={24} color="gray" />
+            <Text style={styles.buttonText}></Text>
           </View>
         </TouchableOpacity>
       )}
@@ -40,14 +40,8 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'blue',
-    padding: 20,
-    borderRadius: 10,
+    
+    
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
-  },
+  
 });

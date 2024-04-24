@@ -13,7 +13,11 @@ import { updateSpecificDataService } from "../services/userService";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button } from "react-native";
 import { setLogbookData } from "../redux/slices/user";
-import { CameraButton } from "../components/CameraButton";
+import CameraButton  from "../components/CameraButton.js";
+import BackButton from "./BackButton";
+import GalleryButton from "../components/GalleryButton.js"
+import AttachmentButton from "./AttachmentBotton.js";
+
 
 const ProceduresScreen = ({ onClose }) => {
   const [Procedures, setProcedures] = useState("");
@@ -79,6 +83,9 @@ const ProceduresScreen = ({ onClose }) => {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View className="absolute top-0 left-0 mt-12 ml-2">
+                    <BackButton />
+                  </View>
       <View className="mt-20">
         <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>
           Procedures
@@ -225,6 +232,11 @@ const ProceduresScreen = ({ onClose }) => {
           <Text style={{ color: "white", textAlign: "center" }}>Save</Text>
         </TouchableOpacity>
       </View>
+      <Text style={{marginTop:10, marginLeft:20, fontWeight: "bold"}}>Attachments</Text>
+      <View style={{marginLeft:200}}><GalleryButton/></View>
+      <View style={{marginLeft:250, marginTop:-33}}><CameraButton/></View>
+      <View style={{marginLeft:325, marginTop:-33}}><AttachmentButton/></View>
+      
     </ScrollView>
   );
 };
