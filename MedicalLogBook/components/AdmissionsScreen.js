@@ -85,6 +85,7 @@ const AdmissionScreen = ({ onClose }) => {
       startDate: new Date(startDate).toDateString(),
     };
 
+    // A PROMISE IS A PROXY FOR A VALUE WHICH MAY OR MAY NOT BE PRESENT IN THE FUTURE
     updateSpecificDataService(userId, "admissions", dataObj)
       .then((res) => {
         dispatch(setLogbookData({ keyName: "admissions", data: dataObj }));

@@ -12,6 +12,7 @@ export const storeDataInAsyncStorage = async (key, value) => {
 export const getDataFromAsyncStorage = async (key) => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
+    // THE VALUE RECIEVED FROM ASYNC STORAGE IS NOT NULL, THEN WE WILL CONVERT IT INTO JSON AGAIN AND THEN RETURN IT
     return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch (e) {
     // error reading value

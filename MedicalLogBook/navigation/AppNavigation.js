@@ -23,17 +23,20 @@ export default function AppNavigation() {
     getDataFromAsyncStorage("user").then((res) => {
       console.log(res, "user from storage");
       if (userFromRedux.authDetails.userId) {
+        // IF THERE'S A USER ID PRESENT IN EITHER REDUX OR ASYNC STORAGE, WE WILL NAVIGATE USER TO TAB NAVIGATOR
         setIsLoggedIn(true);
       } else if (res?.authDetails?.userId) {
         // SO THAT ASYNC STORAGE AND REDUX ALWAYS REMAINS IN SYNC WHILE LOGGIN IN
         dispatch(setUser(res));
       } else {
+        // WHEN THERE IS NO USER ID PRESENT IN EITHER REDUX OR ASYNC STORAGE
         setIsLoggedIn(false);
       }
     });
   };
 
   useEffect(() => {
+    // THIS FUNCTION RUNS ALWAYS THERE'S A CHANGE DETECTED IN USER DATA FROM REDUX AND ASYNC STORAGE. ALSO IT RUNS WHEN THE APP STARTS INITIALLY
     checkDataInStorage();
   }, [userFromRedux, AsyncStorage]);
 
